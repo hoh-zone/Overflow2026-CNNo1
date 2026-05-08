@@ -1,0 +1,196 @@
+name: Validate Submission PR
+
+on:
+  pull_request:
+    paths:
+      - 'submissions/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR info
+        id: info
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          echo "author=$PR_AUTHOR" >> "$GITHUB_OUTPUT"
+          echo "base=$BASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "head=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Validate PR
+        id: check
+        env:
+          PR_AUTHOR: ${{ steps.info.outputs.author }}
+          BASE_SHA: ${{ steps.info.outputs.base }}
+          HEAD_SHA: ${{ steps.info.outputs.head }}
+        run: |
+          ERRORS=""
+          AUTHOR_LOWER=$(echo "$PR_AUTHOR" | tr '[:upper:]' '[:lower:]')
+
+          # Get changed files in submissions/
+          CHANGED_FILES=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- 'submissions/*')
+
+          if [ -z "$CHANGED_FILES" ]; then
+            ERRORS="$ERRORS\n- No changes found in submissions/ directory"
+            echo "errors=$ERRORS" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "=== Changed files ==="
+          echo "$CHANGED_FILES"
+          echo ""
+
+          # Check 1: All changes must be under submissions/<author>/ only
+          echo "=== Check 1: Path restriction ==="
+          HAS_OWN_DIR=false
+          while IFS= read -r file; do
+            # Extract directory name: submissions/<dirname>/...
+            DIRNAME=$(echo "$file" | sed 's|^submissions/||' | cut -d'/' -f1)
+            DIRNAME_LOWER=$(echo "$DIRNAME" | tr '[:upper:]' '[:lower:]')
+
+            if [ "$DIRNAME" = "_template" ]; then
+              ERRORS="$ERRORS\n- Cannot modify _template directory"
+              echo "FAIL: $file modifies _template"
+              continue
+            fi
+
+            if [ "$DIRNAME_LOWER" != "$AUTHOR_LOWER" ]; then
+              ERRORS="$ERRORS\n- Cannot modify other's directory: $file (expected: submissions/$PR_AUTHOR/)"
+              echo "FAIL: $file is not under submissions/$PR_AUTHOR/"
+            else
+              HAS_OWN_DIR=true
+              echo "OK: $file"
+            fi
+          done <<< "$CHANGED_FILES"
+
+          if [ "$HAS_OWN_DIR" = false ]; then
+            ERRORS="$ERRORS\n- No changes found under submissions/$PR_AUTHOR/"
+          fi
+
+          # Check 2: Directory name must match GitHub ID
+          echo ""
+          echo "=== Check 2: Directory naming ==="
+          EXPECTED_DIR="submissions/$PR_AUTHOR"
+          if ! echo "$CHANGED_FILES" | grep -q "^submissions/$PR_AUTHOR/"; then
+            ERRORS="$ERRORS\n- Directory must be named after your GitHub ID: $PR_AUTHOR (found changes outside submissions/$PR_AUTHOR/)"
+            echo "FAIL: no changes under $EXPECTED_DIR"
+          else
+            echo "OK: changes found under $EXPECTED_DIR"
+          fi
+
+          # Check 3: Validate README.md content
+          echo ""
+          echo "=== Check 3: Template validation ==="
+          README="submissions/$PR_AUTHOR/README.md"
+
+          if [ -f "$README" ]; then
+            CONTENT=$(cat "$README")
+
+            # Check project name
+            if echo "$CONTENT" | grep -q '<Project Name>'; then
+              ERRORS="$ERRORS\n- Project name not filled (still contains <Project Name>)"
+              echo "FAIL: project name is placeholder"
+            else
+              echo "OK: project name filled"
+            fi
+
+            # Check track selection
+            if ! echo "$CONTENT" | grep -q '\[x\]'; then
+              ERRORS="$ERRORS"$'\n'"- No track selected (mark one with [x])"
+              echo "FAIL: no track selected"
+            else
+              # Check only one track selected
+              TRACK_COUNT=$(echo "$CONTENT" | grep -c '\[x\]' || true)
+              if [ "$TRACK_COUNT" -gt 1 ]; then
+                ERRORS="$ERRORS"$'\n'"- Multiple tracks selected, please select only one"
+                echo "FAIL: $TRACK_COUNT tracks selected"
+              else
+                echo "OK: exactly 1 track selected"
+              fi
+            fi
+
+            # Check description
+            DESC=$(echo "$CONTENT" | sed -n '/^## Description/,/^## /{ /^## /!p }' | grep -v '^<!--' | sed '/^$/d' | head -1)
+            if [ -z "$DESC" ]; then
+              ERRORS="$ERRORS"$'\n'"- Description is empty"
+              echo "FAIL: description empty"
+            else
+              echo "OK: description filled"
+            fi
+
+            # Check GitHub link
+            if echo "$CONTENT" | grep -q 'https://github.com/\.\.\.'; then
+              ERRORS="$ERRORS"$'\n'"- GitHub link not filled (still placeholder)"
+              echo "FAIL: github link is placeholder"
+            else
+              echo "OK: github link filled"
+            fi
+
+            # Check team member
+            if echo "$CONTENT" | grep -q '@your-github-id'; then
+              ERRORS="$ERRORS"$'\n'"- Team member not filled (still contains @your-github-id)"
+              echo "FAIL: team member is placeholder"
+            else
+              echo "OK: team member filled"
+            fi
+          else
+            ERRORS="$ERRORS"$'\n'"- README.md not found at $README"
+            echo "FAIL: $README does not exist"
+          fi
+
+          # Save errors
+          echo "errors<<EOF_MARKER" >> "$GITHUB_OUTPUT"
+          echo -e "$ERRORS" >> "$GITHUB_OUTPUT"
+          echo "EOF_MARKER" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on PR
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ERRORS: ${{ steps.check.outputs.errors }}
+          PR_AUTHOR: ${{ steps.info.outputs.author }}
+        run: |
+          if [ -z "$ERRORS" ] || [ "$(echo "$ERRORS" | tr -d '[:space:]')" = "" ]; then
+            BODY="## Submission Validation: PASSED
+
+All checks passed for @$PR_AUTHOR.
+
+| Check | Status |
+|-------|--------|
+| Directory naming | OK |
+| Path restriction | OK |
+| Template filled | OK |
+
+Ready to merge."
+          else
+            BODY="## Submission Validation: FAILED
+
+Some checks failed for @$PR_AUTHOR:
+
+$ERRORS
+
+---
+Please fix the issues above and push again. See [guide.md](guide.md) for details."
+          fi
+
+          gh pr comment "$PR_NUMBER" --body "$BODY"
+
+          # Fail the check if errors
+          if [ -z "$ERRORS" ] || [ "$(echo "$ERRORS" | tr -d '[:space:]')" = "" ]; then
+            echo "All checks passed!"
+            exit 0
+          else
+            echo "Some checks failed!"
+            exit 1
+          fi
