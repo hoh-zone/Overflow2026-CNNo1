@@ -1,0 +1,25 @@
+# Walgent
+
+## Track / 赛道
+
+- [ ] Agentic Web
+- [ ] DeFi & Payments
+- [ ] DeepBook
+- [x] Walrus
+
+## Description / 项目简介
+
+Walgent is an open-source TypeScript toolkit that connects AI agents to Walrus, the decentralized storage network on Sui. 
+Define an agent capability as a "Skill", run it, and Walgent automatically uploads every output — images, text, JSON, audio — to Walrus, returning a permanent, censorship-resistant URL.
+## Team / 团队成员
+
+- @clownfish2023
+
+## Deployment / 部署信息
+
+- Env: Testnet
+- Package ID: 
+
+## Swag / 周边
+
+- [X] 我希望接收周边 / I'd like to receive swag
