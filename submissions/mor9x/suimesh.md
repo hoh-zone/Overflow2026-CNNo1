@@ -2,10 +2,10 @@
 
 ## Track / 赛道
 
-- [x] Agentic Web
+- [ ] Agentic Web
 - [ ] DeFi & Payments
 - [ ] DeepBook
-- [ ] Walrus
+- [x] Walrus
 
 ## Description / 项目简介
 
