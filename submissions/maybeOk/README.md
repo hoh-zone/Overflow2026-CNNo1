@@ -37,4 +37,4 @@ maybeOk
 
 <!-- 如需接收周边，勾选即可，收件信息请通过表单提交（见 guide.md）/ Check if you want swag, submit shipping info via the form -->
 
-- [ ] 我希望接收周边 / I'd like to receive swag
+- [x] 我希望接收周边 / I'd like to receive swag
