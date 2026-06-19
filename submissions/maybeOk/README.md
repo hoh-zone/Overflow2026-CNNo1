@@ -17,8 +17,8 @@ ChainTrace is a decentralized product traceability platform built on the Sui blo
 
 - DeepSurge:https://www.deepsurge.xyz/projects/66cea8b3-631f-45ea-b84c-ca039ce8b084 (项目展示页 / Project showcase)
 - GitHub: https://github.com/maybeOk/ChainTrace
-- Demo Video: https://... (YouTube, ≤ 5 min)
-- Website: https://... (optional)
+- Demo Video: bilibili.com/video/BV12rjq6oEiT/
+- Website: https://chain-trace-one.vercel.app/
 
 ## Team / 团队成员
 
