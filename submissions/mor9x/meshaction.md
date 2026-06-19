@@ -1,4 +1,4 @@
-# SuiMesh
+# MeshAction
 
 ## Track / 赛道
 
@@ -9,8 +9,8 @@
 
 ## Description / 项目简介
 
-SuiMesh focuses on lightweight coordination for Sui-based signals and workflows.
-It keeps the project scope simple: collect useful context and route it into agent-ready flows.
+MeshAction turns selected Sui signals into simple, reusable agent actions.
+It focuses on making common follow-up steps easier to trigger and coordinate.
 
 ## Links / 链接
 
