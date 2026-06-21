@@ -15,9 +15,9 @@ Agent Arena is a Testnet-only AI Agent competition layer for BTC 15 minute DeepB
 
 ## Links / Links
 
-- DeepSurge: TBD
+- DeepSurge: https://www.deepsurge.xyz/projects/503c4b7a-138b-4c1c-9058-755d2e5156b3
 - GitHub: https://github.com/Wulabalabo/Agent-Arena
-- Demo Video: TBD
+- Demo Video: https://youtu.be/LECw9py0TVQ
 - Website: https://arena.mindfrog.xyz
 
 ## Team / Team
@@ -27,7 +27,7 @@ Agent Arena is a Testnet-only AI Agent competition layer for BTC 15 minute DeepB
 ## Deployment / Deployment
 
 - Env: Testnet
-- Package ID: DeepBook Predict Testnet package `0xf5ea2b3749c65d6e56507cc35388719aadb28f9cab873696a2f8687f5c785138`; Agent Arena registry proof package is Testnet/server-configured.
+- Package ID: `0x4b446b0cba182f30071d5d227e62e20d59b9e720b6697816cacfffc685d0dee5`
 
 ## Swag / Swag
 
