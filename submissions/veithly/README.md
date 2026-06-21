@@ -1,6 +1,6 @@
 # SmolAgent / 智能代理矩阵
 
-> Submission note / 提交说明: this `README.md` is project 1 of 10 in this folder; the remaining nine projects are in `project1.md` through `project9.md`.
+> Submission note / 提交说明: this `README.md` is project 1 of 11 in this folder; the remaining ten projects are in `project1.md` through `project10.md`.
 
 ## Track / 赛道
 
