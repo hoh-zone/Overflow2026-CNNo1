@@ -15,7 +15,7 @@ Tidecast 是 **DeepBook Predict**（Sui 链上 BTC 预测市场，由实时 SVI 
 
 ## Links / 链接
 
-- DeepSurge: TBD
+- DeepSurge: https://www.deepsurge.xyz/projects/b97130ea-2af1-497e-a8d5-ab119350e8dc
 - GitHub: https://github.com/JinHe9527/tidecast
 - Demo Video: https://drive.google.com/file/d/1by7WOlY4-PWlzGqEdnCeQTP4UcasZqN5/view
 - Website: TBD (Cloudflare Pages)
