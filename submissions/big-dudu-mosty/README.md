@@ -13,9 +13,9 @@ Strike5 is a short-cycle BTC prediction arena powered by DeepBook Predict on Sui
 
 ## Links / 链接
 
-- DeepSurge: TBD
+- DeepSurge: https://www.deepsurge.xyz/projects/34ea22f0-110f-4beb-a556-a51fa45ac80e
 - GitHub: https://github.com/big-dudu-mosty/Strike5
-- Demo Video: https://youtu.be/-yMbOlfKRZY
+- Demo Video: https://youtu.be/H-32GOUs52A?si=RbY79cSgnl6y7BnS
 - Website: https://strike5.vercel.app/
 
 ## Team / 团队成员
