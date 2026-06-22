@@ -15,8 +15,8 @@ Plum Protocol is a wallet-first incident exposure and recovery coordination laye
 
 - DeepSurge: https://www.deepsurge.xyz/projects/6ddcfc16-e7c0-495a-b572-f810809ee1fb
 - GitHub: https://github.com/ziyinlox-purple/Plum-Protocol
-- Demo Video: https://...
-- Website: https://...
+- Demo Video: https://youtu.be/91LGyzhnT3s
+- Website: https://plum-protocol.vercel.app/
 
 ## Team / 团队成员
 
